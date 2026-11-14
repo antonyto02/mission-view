@@ -1,0 +1,530 @@
+:root {
+  --bg: #050608;
+  --text: #d4dbe3;
+  --muted: #6b7684;
+  --line: rgba(255, 255, 255, 0.08);
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+.app {
+  position: fixed;
+  inset: 0;
+}
+
+.scene {
+  position: absolute !important;
+  inset: 0;
+}
+
+/* ---------- status (top-left) ---------- */
+.status {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  right: 28px;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  pointer-events: none;
+}
+
+.status-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.app.lvl-danger .dot {
+  animation: blink 0.8s steps(2, jump-none) infinite;
+}
+
+.status-src {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- readouts next to the body ---------- */
+.readouts {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.readout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  will-change: transform;
+  transition: opacity 0.4s, color 0.4s;
+}
+
+.readout.lungs,
+.readout.head,
+.readout.cabin {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.readout.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.readout-value {
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.readout-value small {
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 6px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.readout.head .readout-value,
+.readout.body .readout-value,
+.readout.cabin .readout-value {
+  font-size: 26px;
+}
+
+.readout-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.readout:hover .readout-label {
+  color: var(--text);
+}
+
+.readout:focus {
+  outline: none;
+}
+
+.readout:focus-visible .readout-label {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* ---------- alert message (bottom center) ---------- */
+.message {
+  --c: #ff4b4b;
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  z-index: 30;
+  transform: translateY(-50%);
+  width: min(340px, 26vw);
+  animation: rise 0.3s ease-out;
+}
+
+.message-title {
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--c);
+  letter-spacing: -0.01em;
+}
+
+.message-action {
+  margin-top: 10px;
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.message-note {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.message-btn {
+  margin-top: 16px;
+  min-height: 48px;
+  padding: 0 28px;
+  border-radius: 999px;
+  border: 1px solid var(--text);
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.message-btn:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* ---------- zone card (bottom left) ---------- */
+.card {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 31;
+  width: 300px;
+  padding: 20px 22px 18px;
+  background: #0b0d11;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  animation: rise 0.25s ease-out;
+}
+
+.card-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.card-title {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.card-value {
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: 34px;
+}
+
+.card-env {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+}
+
+.card-env b {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: 22px;
+}
+
+.card-env small {
+  font-size: 11px;
+  margin-left: 4px;
+  color: var(--muted);
+}
+
+.card-env span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.card-why {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.card-meta {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* ---------- simulator bar (bottom) ---------- */
+.simbar {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 22px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.simbar button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.simbar button:hover {
+  color: var(--text);
+}
+
+.simbar button.on {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.simbar kbd {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.simbar .simbar-mode {
+  margin-right: 10px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.simbar-mode.is-live {
+  color: #6fcf97;
+}
+
+.simbar-divider {
+  flex-shrink: 0;
+  width: 1px;
+  height: 18px;
+  margin: 0 10px;
+  background: var(--line);
+}
+
+.pose-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.pose-hint {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.pose-tracking {
+  color: #6fcf97;
+}
+
+.pose-partial {
+  color: #f2a93b;
+}
+
+.pose-error {
+  color: #ff4b4b;
+}
+
+.pose-preview {
+  position: absolute;
+  right: 28px;
+  bottom: 72px;
+  z-index: 30;
+  width: 176px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #0b0d11;
+  opacity: 0.75;
+}
+
+/* the presenter sees a selfie view unless the hologram itself is mirrored */
+.pose-preview.selfie {
+  transform: scaleX(-1);
+}
+
+.pose-preview.is-off {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.simbar-live {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.simbar-live input {
+  height: 32px;
+  padding: 0 10px;
+  background: #0b0d11;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  width: 230px;
+}
+
+.simbar-live input + input {
+  width: 120px;
+}
+
+.simbar-link {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.link-connected {
+  color: #6fcf97;
+}
+
+.link-error {
+  color: #ff4b4b;
+}
+
+/* ---------- danger edge ---------- */
+.edge {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: inset 0 0 0 2px #ff4b4b;
+}
+
+.app.lvl-danger .edge {
+  animation: blink 0.8s steps(2, jump-none) infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 860px) {
+  .status {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+  }
+  .readout-value {
+    font-size: 28px;
+  }
+  .readout.head .readout-value,
+  .readout.body .readout-value,
+  .readout.cabin .readout-value {
+    font-size: 20px;
+  }
+  .message {
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 64px;
+    transform: none;
+    width: auto;
+  }
+  .message-title {
+    font-size: 24px;
+  }
+  .message-action {
+    font-size: 16px;
+  }
+  .card {
+    left: 16px;
+    right: 16px;
+    top: auto;
+    translate: none;
+    width: auto;
+    bottom: 64px;
+  }
+  .simbar {
+    left: 16px;
+    right: 16px;
+    bottom: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
