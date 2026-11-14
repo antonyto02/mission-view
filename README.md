@@ -10,14 +10,36 @@ Vista holográfica 3D del astronauta para la demo y el video. Cada zona del cuer
 
 Usa el mismo contrato JSON del brief (sección 6), así que funciona con el simulador integrado o con el servidor real.
 
-## Correr
+**En línea:** https://crew-health-durango.vercel.app (no hay que instalar nada).
+
+## Correr en tu compu
+
+Necesitas **Node 20.19 o más nuevo** (`node -v`).
 
 ```bash
+git clone https://github.com/antonyto02/mission-view.git
+cd mission-view
 npm install
 npm run dev        # http://localhost:5173
 ```
 
-Para producción: `npm run build` genera `dist/`, que es una página estática y se puede servir en cualquier lado o meter con un `<iframe>`.
+Es solo front: el simulador, las reglas y la detección de pose corren en el navegador. No necesita backend; solo se conecta al del equipo en modo Live.
+
+## Meterlo en la app del equipo
+
+Con un `<iframe>`:
+
+```html
+<iframe
+  src="https://crew-health-durango.vercel.app"
+  allow="camera"
+  style="width: 100%; height: 100vh; border: 0"
+></iframe>
+```
+
+`allow="camera"` solo hace falta si quieren usar la cámara dentro del iframe. También se puede copiar `src/` a su proyecto, porque usa el mismo stack (React + Vite + TypeScript).
+
+Para generar la versión estática: `npm run build` crea `dist/`, que se puede servir en cualquier lado.
 
 ## Modo simulación
 
@@ -58,8 +80,11 @@ Para que funcione bien en la sede:
 
 ## Conectar al servidor real (Nave)
 
-1. Pestaña **LIVE NODE**: URL del servidor (ej. `http://192.168.0.10:3000`) y nombre del evento de Socket.IO (por defecto `telemetria`).
-2. También se puede abrir directo: `http://localhost:5173/?live=http://192.168.0.10:3000&event=telemetria`
+1. Clic en el botón **Sim** (abajo a la izquierda) para cambiar a **Live**.
+2. Escribe la URL del servidor (ej. `http://192.168.0.10:3000`) y el nombre del evento de Socket.IO (por defecto `telemetria`), y **Connect**.
+3. También se puede abrir directo: `http://localhost:5173/?live=http://192.168.0.10:3000&event=telemetria`
+
+**Importante:** el modo Live hay que usarlo corriendo la página en la laptop (`npm run dev`), no desde el link de Vercel. Una página `https` no puede conectarse a un servidor `http://192.168…`; el navegador lo bloquea. La única excepción es que el servidor también esté en `https`, por ejemplo en Railway.
 
 Acepta el paquete del contrato tal cual o envuelto en `{ data | packet | reading | lectura }`.
 
