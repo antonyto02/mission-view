@@ -1,6 +1,6 @@
-// Visual status for each body zone. Thresholds and combined rules follow the
-// team brief (section 6). The team's server stays the source of truth for
-// alerts; this mirrors it so the hologram can react on its own (and in sim mode).
+// Visual status for each body zone, from fixed thresholds and combined rules.
+// The server's rule engine remains the source of truth for alerts; this lets
+// the view react on its own (and in sim mode).
 
 import {
   LEVEL_RANK,

@@ -1,4 +1,4 @@
-// Built-in simulator: emits packets with exactly the team's contract shape
+// Built-in simulator: emits packets in the telemetry format
 // ("source": "sim"), easing values toward each scenario's targets.
 
 import type { Quality, TelemetryPacket } from './types'

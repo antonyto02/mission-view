@@ -71,7 +71,7 @@ export function useTelemetry() {
     return () => clearInterval(id)
   }, [mode, push])
 
-  // live source (team backend over Socket.IO)
+  // live source (backend over Socket.IO)
   useEffect(() => {
     if (mode !== 'live' || !liveUrl) {
       setLink('idle')

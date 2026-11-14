@@ -1,5 +1,4 @@
-// Telemetry contract — copied from the team brief, section 6.
-// The ESP32 node, the team's simulator and this page all speak this shape.
+// Telemetry packet shared by the sensor node, the simulator and the server.
 
 export type Quality = 'ok' | 'noisy' | 'no_finger'
 export type CoState = 'warming' | 'heating' | 'ready'
